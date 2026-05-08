@@ -4,102 +4,271 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Word of the Day 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:            #F4F0E6;
+      --panel:         #EAE4D6;
+      --surface:       #E1D9C8;
+      --surface-hover: #D8CEBC;
+      --text:          #221E17;
+      --text-mid:      #6A5F4E;
+      --text-faint:    #A89880;
+      --terracotta:    #BF4018;
+      --terra-glow:    rgba(191, 64, 24, 0.07);
+      --teal:          #0E7A6D;
+      --teal-light:    #2BB8A9;
+      --teal-faint:    rgba(14, 122, 109, 0.08);
+      --border:        rgba(34, 30, 23, 0.10);
+      --border-mid:    rgba(34, 30, 23, 0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; }
 
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #1a1a2e;
-      color: #eee;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
       min-height: 100vh;
+    }
+
+    /* ── Sidebar ────────────────────────────────── */
+    .sidebar {
+      width: 300px;
+      flex-shrink: 0;
+      background: var(--panel);
+      border-right: 1px solid var(--border-mid);
+      padding: 3rem 2.2rem;
       display: flex;
       flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      animation: riseIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .site-header { flex-shrink: 0; }
+
+    .eyebrow {
+      display: flex;
       align-items: center;
-      padding: 2rem 1rem 3rem;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .eyebrow-line {
+      flex: 1;
+      height: 1px;
+      background: var(--terracotta);
+      opacity: 0.45;
+    }
+
+    .eyebrow-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--terracotta);
     }
 
     h1 {
-      font-size: 2.2rem;
-      color: #e94560;
-      letter-spacing: 2px;
-      margin-bottom: 0.3rem;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    h1 em {
+      color: var(--teal-light);
+      font-style: italic;
     }
 
     .subtitle {
-      color: #666;
-      font-size: 0.9rem;
-      margin-bottom: 2rem;
-      font-style: italic;
+      margin-top: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.66rem;
+      letter-spacing: 0.2em;
+      color: var(--text-faint);
+      text-transform: uppercase;
     }
 
+    .sidebar-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border-mid);
+      margin: 2.2rem 0;
+      flex-shrink: 0;
+    }
+
+    /* ── Featured Panel ─────────────────────────── */
     #featured {
-      background: #16213e;
-      border-radius: 16px;
-      padding: 1.4rem 3rem;
-      text-align: center;
-      margin-bottom: 2rem;
-      min-width: 320px;
-      min-height: 90px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      transition: all 0.2s;
+      margin-top: 1.6rem;
     }
 
-    #featured .date-label {
-      font-size: 0.8rem;
-      color: #666;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .featured-date {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--terracotta);
+      margin-bottom: 1rem;
     }
 
-    #featured .word {
-      font-size: 2.4rem;
-      font-weight: bold;
-      color: #a8dadc;
+    #featured.empty .featured-date {
+      display: none;
     }
 
-    #featured.empty .word {
-      color: #333;
-      font-size: 1rem;
+    .featured-word-wrap {
+      margin-bottom: 0.6rem;
+    }
+
+    .featured-word {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 3rem;
+      font-weight: 300;
       font-style: italic;
-      font-weight: normal;
+      color: var(--text);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      transition: opacity 0.16s ease, transform 0.16s ease;
     }
 
-    .calendar {
-      background: #16213e;
-      border-radius: 16px;
-      padding: 1.5rem;
-      width: 100%;
-      max-width: 780px;
+    .featured-word.fade-out {
+      opacity: 0;
+      transform: translateY(6px);
     }
 
+    #featured.empty .featured-word {
+      color: var(--text-faint);
+      font-size: 0.85rem;
+      font-weight: 400;
+      font-style: normal;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .featured-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      margin-top: 0.55rem;
+      min-height: 1.4em;
+    }
+
+    .featured-pos {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      border: 1px solid rgba(14, 122, 109, 0.35);
+      padding: 2px 7px 3px;
+      border-radius: 3px;
+    }
+
+    .featured-phonetic {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-faint);
+      letter-spacing: 0.01em;
+    }
+
+    #featured.empty .featured-meta { display: none; }
+
+    .featured-definition {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.83rem;
+      color: var(--text-mid);
+      line-height: 1.65;
+      margin-top: 0.6rem;
+      min-height: 1.4em;
+    }
+
+    #featured.empty .featured-definition {
+      display: none;
+    }
+
+    .featured-footer {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.64rem;
+      color: var(--text-faint);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      min-height: 1em;
+      margin-top: 1rem;
+    }
+
+    /* ── Main Area ──────────────────────────────── */
+    .main {
+      flex: 1;
+      padding: 3rem 2.8rem;
+      min-width: 0;
+      overflow: hidden;
+      animation: riseIn 0.7s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    /* ── Month Nav ──────────────────────────────── */
     .month-nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1.6rem;
+      padding-bottom: 1.6rem;
+      border-bottom: 1px solid var(--border);
     }
 
-    .month-nav h2 { font-size: 1.3rem; color: #a8dadc; }
+    .month-nav h2 {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 2.3rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.03em;
+    }
+
+    .month-nav h2 .yr {
+      font-weight: 300;
+      color: var(--text-faint);
+      font-size: 0.82em;
+      margin-left: 0.3em;
+    }
 
     .nav-btn {
-      background: none;
-      border: 1px solid #0f3460;
-      color: #a8dadc;
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
+      background: transparent;
+      border: 1px solid var(--border-mid);
+      color: var(--text-mid);
+      width: 38px;
+      height: 38px;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 1.3rem;
-      line-height: 1;
-      transition: background 0.15s;
+      font-size: 0.9rem;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    .nav-btn:hover { background: #0f3460; }
-    .nav-btn:disabled { opacity: 0.2; cursor: default; }
 
+    .nav-btn:hover:not(:disabled) {
+      border-color: var(--teal);
+      color: var(--teal);
+      background: var(--teal-faint);
+    }
+
+    .nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+    /* ── Calendar Grid ──────────────────────────── */
     .day-headers {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -109,11 +278,12 @@
 
     .day-header {
       text-align: center;
-      font-size: 0.65rem;
-      color: #555;
-      padding: 4px 0;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--text-faint);
+      padding: 6px 0 8px;
       text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
     .days-grid {
@@ -123,74 +293,150 @@
     }
 
     .day-cell {
-      background: #1a1a2e;
-      border-radius: 8px;
-      padding: 6px 5px;
-      min-height: 68px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 13px;
+      min-height: 92px;
       cursor: pointer;
-      transition: background 0.15s, box-shadow 0.15s;
+      transition: background 0.12s, border-color 0.12s;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
-    .day-cell:hover { background: #0f3460; }
+    .day-cell:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-mid);
+    }
 
-    .day-cell.empty { background: transparent; cursor: default; pointer-events: none; }
+    .day-cell.empty {
+      background: transparent;
+      border-color: transparent;
+      cursor: default;
+      pointer-events: none;
+    }
 
-    .day-cell.today { border: 1px solid #e94560; }
+    .day-cell.today {
+      border-left: 2px solid var(--terracotta);
+      background: var(--terra-glow);
+    }
 
     .day-cell.selected {
-      background: #0f3460;
-      box-shadow: 0 0 14px rgba(168, 218, 220, 0.25);
+      background: var(--teal-faint);
+      border-color: var(--teal);
     }
 
     .day-num {
-      font-size: 0.7rem;
-      color: #555;
-      margin-bottom: 3px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--text-faint);
+      margin-bottom: 6px;
       flex-shrink: 0;
+      letter-spacing: 0.04em;
     }
 
-    .day-cell.today .day-num { color: #e94560; font-weight: bold; }
+    .day-cell.today    .day-num { color: var(--terracotta); }
+    .day-cell.selected .day-num { color: var(--teal); }
 
     .day-word {
-      font-size: 0.6rem;
-      color: #a8dadc;
-      line-height: 1.35;
+      font-size: 0.95rem;
+      color: var(--text-mid);
+      font-style: italic;
+      line-height: 1.42;
       overflow: hidden;
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
     }
+
+    .day-cell.today    .day-word { color: var(--text); }
+    .day-cell.selected .day-word { color: var(--text); }
+
+    /* ── Responsive ─────────────────────────────── */
+    @media (max-width: 800px) {
+      body { flex-direction: column; }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        padding: 2rem 1.5rem 1.5rem;
+        border-right: none;
+        border-bottom: 1px solid var(--border-mid);
+      }
+
+      #featured {
+        flex: none;
+        margin-top: 1rem;
+      }
+
+      .sidebar-divider { margin: 1.5rem 0; }
+
+      .featured-date { font-size: 0.95rem; margin-bottom: 0.6rem; }
+      .featured-word { font-size: 2.2rem; }
+      .featured-word-wrap { margin-bottom: 0; }
+      .featured-definition { font-size: 0.78rem; }
+      .featured-footer { margin-top: 0.5rem; }
+
+      .main { padding: 1.5rem; }
+    }
+
+    /* ── Keyframes ──────────────────────────────── */
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
-  <h1>Word of the Day 2026</h1>
-  <p class="subtitle">a year of thinking verbs</p>
 
-  <div id="featured" class="empty">
-    <div class="date-label">&nbsp;</div>
-    <div class="word">click a day</div>
-  </div>
+  <aside class="sidebar">
+    <header class="site-header">
+      <div class="eyebrow">
+        <span class="eyebrow-line"></span>
+        <span class="eyebrow-text">2026</span>
+        <span class="eyebrow-line"></span>
+      </div>
+      <h1>Word of the <em>Day</em></h1>
+      <p class="subtitle">a year of thinking verbs</p>
+    </header>
 
-  <div class="calendar">
-    <div class="month-nav">
-      <button class="nav-btn" id="prev">&#8249;</button>
-      <h2 id="month-title"></h2>
-      <button class="nav-btn" id="next">&#8250;</button>
+    <div id="featured" class="empty">
+      <div class="featured-date"></div>
+      <div class="featured-word-wrap">
+        <div class="featured-word">select a day</div>
+      </div>
+      <div class="featured-meta">
+        <span class="featured-pos"></span>
+        <span class="featured-phonetic"></span>
+      </div>
+      <div class="featured-definition"></div>
+      <div class="featured-footer"></div>
     </div>
-    <div class="day-headers">
-      <div class="day-header">Sun</div>
-      <div class="day-header">Mon</div>
-      <div class="day-header">Tue</div>
-      <div class="day-header">Wed</div>
-      <div class="day-header">Thu</div>
-      <div class="day-header">Fri</div>
-      <div class="day-header">Sat</div>
+
+    <div class="sidebar-divider"></div>
+  </aside>
+
+  <main class="main">
+    <div class="calendar">
+      <div class="month-nav">
+        <button class="nav-btn" id="prev">&#8592;</button>
+        <h2 id="month-title"></h2>
+        <button class="nav-btn" id="next">&#8594;</button>
+      </div>
+      <div class="day-headers">
+        <div class="day-header">Sun</div>
+        <div class="day-header">Mon</div>
+        <div class="day-header">Tue</div>
+        <div class="day-header">Wed</div>
+        <div class="day-header">Thu</div>
+        <div class="day-header">Fri</div>
+        <div class="day-header">Sat</div>
+      </div>
+      <div class="days-grid" id="days-grid"></div>
     </div>
-    <div class="days-grid" id="days-grid"></div>
-  </div>
+  </main>
 
   <script>
     const WORDS = [
@@ -282,8 +528,8 @@
       "sandboxing","zooming","completing","archiving","remembering","dreaming"
     ];
 
-    const MONTHS = ["January","February","March","April","May","June",
-                    "July","August","September","October","November","December"];
+    const MONTHS       = ["January","February","March","April","May","June",
+                          "July","August","September","October","November","December"];
     const DAYS_IN_MONTH = [31,28,31,30,31,30,31,31,30,31,30,31];
 
     function dayIndex(month0, day) {
@@ -296,9 +542,61 @@
     let currentMonth = (today.getFullYear() === 2026) ? today.getMonth() : 0;
     let selectedCell = null;
 
+    async function fetchDefinition(word) {
+      const defEl  = document.querySelector('#featured .featured-definition');
+      const posEl  = document.querySelector('#featured .featured-pos');
+      const phonEl = document.querySelector('#featured .featured-phonetic');
+      defEl.textContent = posEl.textContent = phonEl.textContent = '';
+
+      const tryWord = async (w) => {
+        const r = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(w)}`);
+        if (!r.ok) return null;
+        const d = await r.json();
+        const entry = d[0];
+        const m = entry?.meanings?.find(x => x.partOfSpeech === 'verb') ?? entry?.meanings?.[0];
+        return {
+          def:      m?.definitions?.[0]?.definition ?? null,
+          pos:      m?.partOfSpeech ?? null,
+          phonetic: entry?.phonetic ?? entry?.phonetics?.find(p => p.text)?.text ?? null,
+        };
+      };
+
+      let res = await tryWord(word).catch(() => null);
+      if (!res?.def && word.includes('-'))
+        res = await tryWord(word.replace(/-/g, '')).catch(() => null);
+      if (!res?.def && word.endsWith('ing')) {
+        const stem = word.replace(/-/g, '').slice(0, -3);
+        res = await tryWord(stem).catch(() => null)
+           ?? await tryWord(stem + 'e').catch(() => null);
+      }
+
+      if (res?.def)      defEl.textContent  = res.def;
+      if (res?.pos)      posEl.textContent  = res.pos;
+      if (res?.phonetic) phonEl.textContent = res.phonetic;
+    }
+
+    function setFeatured(month0, day, word) {
+      const f    = document.getElementById('featured');
+      const wEl  = f.querySelector('.featured-word');
+      const dEl  = f.querySelector('.featured-date');
+      const ftEl = f.querySelector('.featured-footer');
+
+      wEl.classList.add('fade-out');
+      setTimeout(() => {
+        f.classList.remove('empty');
+        dEl.textContent  = `${MONTHS[month0]} ${day}, 2026`;
+        wEl.textContent  = word;
+        const n = dayIndex(month0, day) + 1;
+        ftEl.textContent = `day ${n} of 365 · thinking verb`;
+        wEl.classList.remove('fade-out');
+        fetchDefinition(word);
+      }, 160);
+    }
+
     function render() {
       const grid = document.getElementById('days-grid');
-      document.getElementById('month-title').textContent = MONTHS[currentMonth];
+      document.getElementById('month-title').innerHTML =
+        `${MONTHS[currentMonth]} <span class="yr">2026</span>`;
       document.getElementById('prev').disabled = currentMonth === 0;
       document.getElementById('next').disabled = currentMonth === 11;
       grid.innerHTML = '';
@@ -323,17 +621,18 @@
           if (selectedCell) selectedCell.classList.remove('selected');
           cell.classList.add('selected');
           selectedCell = cell;
-          const f = document.getElementById('featured');
-          f.classList.remove('empty');
-          f.querySelector('.date-label').textContent = `${MONTHS[currentMonth]} ${d}, 2026`;
-          f.querySelector('.word').textContent = word;
+          setFeatured(currentMonth, d, word);
         });
         grid.appendChild(cell);
       }
     }
 
-    document.getElementById('prev').addEventListener('click', () => { currentMonth--; selectedCell = null; render(); });
-    document.getElementById('next').addEventListener('click', () => { currentMonth++; selectedCell = null; render(); });
+    document.getElementById('prev').addEventListener('click', () => {
+      currentMonth--; selectedCell = null; render();
+    });
+    document.getElementById('next').addEventListener('click', () => {
+      currentMonth++; selectedCell = null; render();
+    });
 
     render();
   </script>
